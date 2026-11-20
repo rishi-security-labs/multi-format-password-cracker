@@ -1,47 +1,69 @@
-# 🔐 Multi-Format Password Cracker — Termux Edition
+<h1 align="center">🔓 Multi-Format Password Cracker</h1>
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Termux%20%7C%20Linux%20%7C%20Windows-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
-![Use](https://img.shields.io/badge/Use-Authorized%20Security%20Research%20Only-red?style=for-the-badge)
+<p align="center">
+  <b>A powerful, multi-threaded dictionary attack tool for recovering passwords from ZIP, RAR, and TAR archives — built for Termux, Linux & Windows.</b>
+</p>
 
-A fast, multi-threaded **archive password recovery tool** built for Termux and Linux. It supports dictionary attacks against **ZIP, RAR, TAR.GZ, TAR.BZ2, and TAR.XZ** archives with an interactive file browser, automatic format detection via magic bytes, and configurable thread counts.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.7%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Platform-Termux%20%7C%20Linux%20%7C%20Windows-2ea44f?style=for-the-badge&logo=linux&logoColor=white" alt="Platform">
+  <img src="https://img.shields.io/badge/Threading-Multi--Threaded-orange?style=for-the-badge" alt="Multi-threaded">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge" alt="Status">
+</p>
 
-> ⚠️ **Disclaimer:** This tool is intended for **authorized security research, CTF challenges, and recovering your own encrypted files**. Do not use it against files you do not own or have explicit permission to test. The author assumes no liability for misuse.
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-project-structure">Structure</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-usage">Usage</a> •
+  <a href="#-license">License</a>
+</p>
 
 ---
 
 ## 📖 Overview
 
-**Multi-Format Password Cracker** is a command-line utility designed for security researchers and CTF players. Instead of juggling separate scripts for ZIP and RAR files, this toolkit unifies archive recovery under a single interactive menu. It auto-detects archive format using **magic-byte signatures** (not just extensions), verifies encryption status before attacking, and uses a multi-threaded wordlist engine to maximize throughput.
+**Multi-Format Password Cracker** is a lightweight, high-performance CLI toolkit designed to recover lost or forgotten passwords from password-protected archives. It performs **dictionary-based attacks** using multi-threaded workers to maximize speed while supporting multiple archive formats in a single, unified interface.
 
-Two scripts are included:
-- **`multi_cracker.py`** — the flagship multi-format cracker.
-- **`zip_cracker.py`** — a lightweight, ZIP-only cracker (fallback / minimal-dependency version).
+The toolkit includes a **built-in Indian Password Generator** that intelligently produces highly realistic wordlists based on common Indian naming conventions, birth years, cities, pet names, and patterns — dramatically increasing recovery success rates for real-world archives.
+
+Originally built for **Termux on Android**, it also works seamlessly on **Linux** and **Windows**.
+
+> ⚠️ **Disclaimer:** This tool is intended **strictly for educational purposes and authorized security research** on archives you own or have explicit permission to test. Unauthorized access to protected files is illegal. The author assumes no liability for misuse.
 
 ---
 
 ## ✨ Key Features
 
-### 🧩 Core Engine
-- **Multi-format support:** ZIP, RAR, TAR.GZ, TGZ, TAR.BZ2, TAR.XZ, TAR.
-- **Magic-byte format detection** — reliable even if extensions are wrong or stripped.
-- **Multi-threaded password engine** (1–32 threads, default 4).
-- **Encryption pre-check** — warns you if the archive isn't encrypted before wasting time.
-- **Live progress counter** and speed (passwords/second) reporting.
+### 🔓 Multi-Format Cracking Engine
+- **ZIP** (ZipCrypto + AES)
+- **RAR** (via `unrar` backend)
+- **TAR.GZ**, **TAR.BZ2**, **TAR.XZ**, **TAR**
+- **Magic-byte detection** — auto-detects archive type even if extension is misleading
+- Multi-threaded dictionary attack (1–32 threads, configurable)
+- Real-time progress reporting (tried count, elapsed time, speed/sec)
 
-### 🗂️ User Experience
-- **Interactive file browser** — navigate folders with numbered menus, no need to type full paths.
-- **Smart path resolution** — auto-searches `/sdcard/Download`, `/sdcard`, `~/`, and current dir.
-- **File size + format labels** displayed in the browser for quick identification.
-- **Clean colored UI** with banners, status indicators, and error messages.
-- **Graceful interrupt handling** (Ctrl+C stops all threads cleanly).
+### 📁 Smart File Browser
+- Interactive directory navigation (folders + files with sizes)
+- Automatic format labeling per file
+- **Smart path resolution** — type just a filename and it searches common Termux/Android paths (`/sdcard/Download`, `~/`, etc.)
+- Manual path entry + parent folder navigation
 
-### ⚙️ Platform
-- **Termux-optimized** (default path `/sdcard/Download`).
-- Works on **Linux** and **Windows** (auto-clears screen appropriately).
-- **No mandatory third-party deps** for ZIP/TAR — RAR needs `rarfile` + `unrar`.
+### 🇮🇳 Indian Password Generator
+- **20+ real-world password patterns** including:
+  - `name + year`, `name + lastname + 123`
+  - `name + city`, `name + 786`, `name + @ + year`
+  - `petname + number`, `city + birth_year`, `name + 2024`
+- Curated lists: 60+ first names, 30+ surnames, 20+ Indian cities, birth years 1970–2009
+- Duplicate-free output using set generation
+- Saves to `/sdcard/Download/password.txt` on Termux
+
+### 🛠️ Developer-Friendly
+- Zero-config — pick file, pick wordlist, done
+- Color-coded terminal UI (green = success, red = error, yellow = warning)
+- Graceful Ctrl+C handling
+- Detailed library status check on startup (shows which modules are available)
 
 ---
 
@@ -50,153 +72,188 @@ Two scripts are included:
 ```
 multi-format-password-cracker/
 │
-├── multi_cracker.py        # Main multi-format cracker (ZIP/RAR/TAR.*)
-├── zip_cracker.py          # Standalone ZIP-only cracker
-├── requirements.txt        # Optional dependencies (rarfile)
-├── README.md               # This file
-├── LICENSE                 # MIT License
-└── .gitignore              # Ignore caches, wordlists, test archives
+├── multi_cracker.py         # Main entry — supports ZIP, RAR, TAR.GZ, TAR.XZ, TAR.BZ2
+├── zip_cracker.py           # Dedicated ZIP cracker (legacy / lightweight)
+├── password_generator.py    # Indian password wordlist generator (20+ patterns)
+│
+├── requirements.txt         # Python dependencies
+├── README.md                # This file
+├── LICENSE                  # MIT License
+├── .gitignore               # Ignored files
+│
+└── wordlists/               # (Optional) place custom wordlists here
+    └── README.md
 ```
 
 ---
 
-## 🚀 Installation & Usage
+## ⚙️ Installation
 
-### 🔹 Termux (Android)
+### 📱 Termux (Android) — Recommended
 
 ```bash
 # 1. Update packages
-pkg update && pkg upgrade -y
+pkg update -y && pkg upgrade -y
 
-# 2. Install Python
+# 2. Install Python and storage access
 pkg install python -y
+termux-setup-storage    # Grant storage permission
 
-# 3. (Optional) Install unrar for RAR support
+# 3. Install RAR support (optional, only if cracking .rar)
 pkg install unrar -y
 
-# 4. Install Python dependencies
-pip install rarfile
-
-# 5. Grant storage permission (needed for /sdcard access)
-termux-setup-storage
-
-# 6. Clone the repo
+# 4. Clone the repo
 git clone https://github.com/rishi-security-labs/multi-format-password-cracker.git
 cd multi-format-password-cracker
 
-# 7. Run
-python multi_cracker.py
+# 5. Install Python dependencies
+pip install -r requirements.txt
 ```
 
-### 🔹 Linux (Debian/Ubuntu)
+### 🐧 Linux
 
 ```bash
 sudo apt update
 sudo apt install python3 python3-pip unrar -y
-pip3 install rarfile
-
 git clone https://github.com/rishi-security-labs/multi-format-password-cracker.git
 cd multi-format-password-cracker
-python3 multi_cracker.py
+pip3 install -r requirements.txt
 ```
 
-### 🔹 Windows
+### 🪟 Windows
 
 ```powershell
-# Install Python 3.8+ from python.org, then:
-pip install rarfile
-# Install UnRAR: https://www.rarlab.com/rar_add.htm (add to PATH)
-
+# Install Python 3.7+ from python.org
 git clone https://github.com/rishi-security-labs/multi-format-password-cracker.git
 cd multi-format-password-cracker
+pip install -r requirements.txt
+
+# Download unrar.exe from https://www.rarlab.com/rar_add.htm
+# and add it to PATH (only needed for RAR archives)
+```
+
+---
+
+## 🚀 Usage
+
+### 1️⃣ Generate a Wordlist (Optional — for Indian password patterns)
+
+```bash
+python password_generator.py
+```
+
+- Enter how many passwords to generate (e.g., `10000`)
+- Output saved to `/sdcard/Download/password.txt` (Termux) or current dir
+- Use this file as the wordlist in the next step
+
+### 2️⃣ Crack an Archive (Multi-Format — Recommended)
+
+```bash
 python multi_cracker.py
 ```
 
----
+**Flow:**
+1. **STEP 1** — Select encrypted archive (browse or type path)
+2. **STEP 2** — Select wordlist file (`.txt` / `.lst` / `.wordlist`)
+3. **STEP 3** — Set thread count (default `4`, max `32`)
+4. Watch progress → get password or "not found"
 
-## 🎮 How to Use
+### 3️⃣ Crack a ZIP Only (Lightweight)
 
-1. Run the script: `python multi_cracker.py`
-2. Choose **[1] Start Cracking** from the main menu.
-3. **Select the encrypted archive** — type a path or press Enter to open the interactive browser.
-4. **Select the wordlist** (`rockyou.txt`, custom `.txt` / `.lst` / `.wordlist`).
-5. Set **thread count** (default `4`, max `32`).
-6. Wait for the result. Found passwords are printed in a green banner:
-
-```
-═══════════════════════════════════════
-   ✓ PASSWORD: mysecret123
-═══════════════════════════════════════
-```
-
-### Example Wordlists
-
-| Wordlist | Source |
-|----------|--------|
-| `rockyou.txt` | [SecLists](https://github.com/danielmiessler/SecLists) |
-| `10-million-password-list` | [SecLists](https://github.com/danielmiessler/SecLists/tree/master/Passwords) |
-
-> 💡 **Tip:** On Termux, save your wordlist to `/sdcard/Download/` so the browser finds it instantly.
-
----
-
-## ⚙️ Configuration & Dependencies
-
-### Environment Variables
-None required — the tool is fully self-contained and config-driven through the interactive menu.
-
-### Default Paths
-| Setting | Default |
-|---------|---------|
-| Start folder (Termux) | `/sdcard/Download` |
-| Fallback start folder | `~` (home directory) |
-| Default thread count | `4` |
-| Max thread count | `32` |
-
-### Dependencies
-
-| Package | Required? | Purpose |
-|---------|-----------|---------|
-| `zipfile` | ✅ Built-in | ZIP cracking |
-| `tarfile` | ✅ Built-in | TAR.* detection |
-| `rarfile` | ⚠️ Optional | RAR cracking |
-| `unrar` | ⚠️ Optional | RAR backend for `rarfile` |
-
-Install RAR dependencies:
 ```bash
-pkg install unrar        # Termux
-sudo apt install unrar   # Linux
-pip install rarfile
+python zip_cracker.py
 ```
 
-### Supported Formats & Encryption
+Same interactive flow, but ZIP-only. Use if you don't need RAR/TAR support.
 
-| Format | Encryption Support |
-|--------|-------------------|
-| ZIP | ✅ ZipCrypto + AES |
-| RAR | ✅ RAR5 / RAR4 (needs `unrar`) |
-| TAR.GZ / TAR.BZ2 / TAR.XZ | ❌ TAR has no native encryption (tool warns) |
+### 💡 Example Session
+
+```
+➤ Choice: 1
+
+═══ STEP 1: Encrypted file select karo ═══
+📂 File path (path ya Enter = browse): secret.zip
+[✓] File: /sdcard/Download/secret.zip
+[✓] Format: ZIP
+
+═══ STEP 2: Wordlist select karo ═══
+📂 Wordlist path (path ya Enter = browse): password.txt
+[✓] Wordlist: /sdcard/Download/password.txt
+
+⚙️  Threads (default 4): 8
+
+═══ STEP 3: Cracking ═══
+[*] Format detected: ZIP
+[*] Loading wordlist...
+[*] Total passwords: 10000
+[*] Threads: 8
+[*] Starting crack...
+
+[✓] PASSWORD FOUND: rahul@1998
+
+[*] Elapsed: 2.13s | Speed: 4694/sec
+```
 
 ---
 
-## 🧠 How It Works
+## 🔧 Configuration & Environment
 
-1. **Format detection** — reads the first 8 bytes of the file and matches magic signatures (`PK\x03\x04`, `Rar!`, `\x1f\x8b`, etc.).
-2. **Encryption check** — inspects archive headers (ZIP `flag_bits & 0x1`, RAR `needs_password()`).
-3. **Wordlist loading** — reads all non-empty lines into memory.
-4. **Worker pool** — spawns `N` daemon threads pulling from a `Queue`.
-5. **Early exit** — on first successful password, a global `stop_flag` is set and all threads terminate.
+This tool requires **no environment variables** or API keys. All configuration is interactive via CLI prompts.
+
+### Runtime Defaults
+
+| Setting | Default | Editable |
+|---|---|---|
+| Thread count | `4` | Via prompt (1–32) |
+| Wordlist filter | `.txt`, `.lst`, `.wordlist` | Edit `file_filter` in code |
+| Start directory (Termux) | `/sdcard/Download` | Falls back to `~` |
+| Output path (generator) | `/sdcard/Download/password.txt` | Edit in `password_generator.py` |
+
+### Required Python Modules
+
+| Module | Purpose | Install |
+|---|---|---|
+| `zipfile` | ZIP cracking | Built-in ✅ |
+| `tarfile` | TAR cracking | Built-in ✅ |
+| `rarfile` | RAR cracking | `pip install rarfile` |
+| `unrar` | RAR backend (binary) | `pkg install unrar` (Termux) / `apt install unrar` (Linux) |
+
+### `requirements.txt`
+
+```txt
+rarfile>=4.0
+```
+
+> ⚠️ RAR cracking additionally requires the **`unrar` binary** to be installed on your system (see Installation).
+
+---
+
+## ⚠️ Limitations & Notes
+
+- **TAR archives do not support built-in encryption** — the tool will detect TAR files but cannot crack them (they're typically compressed, not encrypted).
+- **AES-encrypted ZIP** cracking may fail on some Windows-built zips due to `zipfile` limitations — use [7-Zip](https://7-zip.org/) in that case.
+- **Speed depends heavily on wordlist quality** and thread count. Use the included `password_generator.py` for realistic Indian password patterns.
+- **Always test on archives you created** before relying on it for recovery.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+- Report bugs via [Issues](https://github.com/rishi-security-labs/multi-format-password-cracker/issues)
+- Submit PRs for new formats (e.g., 7z, PDF, Office docs)
+- Improve wordlist patterns in `password_generator.py`
 
 ---
 
 ## 📜 License
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
 ```
 MIT License
 
-Copyright (c) 2025 rishi-security-labs
+Copyright (c) 2025 Rishi Security Labs
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -219,18 +276,10 @@ SOFTWARE.
 
 ---
 
-## 🙏 Credits
+<p align="center">
+  Made with 🖤 by <a href="https://github.com/rishi-security-labs">Rishi Security Labs</a> · Termux Edition 🔥
+</p>
 
-- Built for the **Termux** community and CTF players.
-- Wordlist ecosystem by [SecLists](https://github.com/danielmiessler/SecLists).
-- RAR backend by [rarfile](https://github.com/markokr/rarfile).
-
----
-
-<div align="center">
-
-**⭐ If this tool helped you, star the repo! ⭐**
-
-Made with 🖤 by [rishi-security-labs](https://github.com/rishi-security-labs)
-
-</div>
+<p align="center">
+  ⭐ If this project helped you, consider giving it a star!
+</p>
